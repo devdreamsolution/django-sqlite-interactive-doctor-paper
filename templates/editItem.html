@@ -1,0 +1,65 @@
+{% extends 'layout/app.html' %}
+
+{% block body %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="/">Home</a>
+    </li>
+    <li class="breadcrumb-item active"><a href="{% url 'admin' %}" >Admin Page</a></li>
+</ol>
+<div class="container card">
+    <form class="form-horizontal" action="updateItem/{{ item.id }}" method="POST">
+        {% csrf_token %}
+        <div class="form-group"></div>
+
+        <div class="form-group row">
+            <label for="example-text-input" class="col-md-2 col-form-label">Item Name</label>
+            <div class="col-md-6">
+                <input class="form-control" type="text" name="name" placeholder="Item Name" id="example-text-input" required value="{{ item.name }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="example-text-input" class="col-md-2 col-form-label">Carb</label>
+            <div class="col-md-6">
+                <input class="form-control" type="number" name="carb" placeholder="Carb" id="example-text-input" required step="0.01" value="{{ item.carb }}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="example-tel-input" class="col-md-2 col-form-label">Fat</label>
+            <div class="col-md-6">
+                <input class="form-control" type="number" name="fat" placeholder="Fat" id="example-number-input" required step="0.01" value="{{ item.fat }}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="example-number-input" class="col-md-2 col-form-label">Suaaer</label>
+            <div class="col-md-6">
+                <input class="form-control" type="number" name="suaaer" placeholder="Suaaer" id="example-number-input" required step="0.01" value="{{ item.suaaer }}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="example-date-input" class="col-md-2 col-form-label">Protein</label>
+            <div class="col-md-6">
+                <input class="form-control" type="number" name="protein" placeholder="Protein" id="example-number-input" required step="0.01" value="{{ item.protein }}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="example-date-input" class="col-md-2 col-form-label">Price</label>
+            <div class="col-md-6">
+                <input class="form-control" type="number" name="price" placeholder="Price" id="example-number-input" required step="0.01" value="{{ item.price }}">
+            </div>
+        </div>
+
+        <input type="hidden" name="comp_id" value="{{ comp_id }}" />
+        <div class="form-group row">
+            <label for="lgFormGroupInput" class="col-sm-2 col-form-label col-form-label-lg"></label>
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

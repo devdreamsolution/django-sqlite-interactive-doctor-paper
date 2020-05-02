@@ -1,0 +1,616 @@
+{% extends 'layout/app.html' %}
+{% block body %}
+<!-- Breadcrumbs-->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'first' %}">Smart Intractive Application</a>
+    </li>
+    <li class="breadcrumb-item active">User Preference Type</li>
+</ol>
+<div class="container card">
+    <div class="form-group"></div>
+    <br />
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <table class="table table-bordered table-striped table-sm">
+        <div style="margin-bottom: 4px;">
+            <center>
+                <h4>Integrating Qualitative and Quantitative preferences with hard Constraints</h4>
+            </center>
+        </div>
+        <thead class="alert-info">
+            <tr align="center">
+                <th>Component Name</th>
+                <th>Preference Type</th>
+                <th>Condition</th>
+                <th>Conditional item</th>
+                <th>Order Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td align="center">
+                        Main Course
+                    </td>
+                    <td>
+                        <label>
+                            <input type="radio" name="main_prefer" value="qual" /> Qualitative 
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="main_prefer" value="quan" /> Quantitative 
+                        </label>
+                    </td>
+                    <td>
+                        <div id="main_condition">
+                            <label>
+                            <input id="main" type="radio" name="main_condition" value="yes" /> Yes 
+                            </label>
+                            <br>
+                            <label>
+                                <input type="radio" name="main_condition" value="no" /> No 
+                            </label>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <select id="main_item">
+                            <option value="0">Select Condition</option>
+                            <option value="2">Drink</option>
+                            <option value="3">Dessert</option>
+                            <option value="4">Side</option>
+                        </select>
+                    </td>
+                    <td rowspan="4">
+                        <div id="order">
+                            
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        Drink
+                    </td>
+                    <td>
+                        <label>
+                            <input type="radio" name="drink_prefer" value="qual" /> Qualitative 
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="drink_prefer" value="quan" /> Quantitative
+                        </label>
+                    </td>
+                    <td>
+                        <div id="drink_condition">
+                            <label>
+                                <input type="radio" name="drink_condition" value="yes" /> Yes 
+                            </label>
+                            <br>
+                            <label>
+                                <input type="radio" name="drink_condition" value="no" /> No
+                            </label>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <select id="drink_item">
+                            <option value="0">Select Condition</option>
+                            <option value="1">Main Course</option>
+                            <option value="3">Dessert</option>
+                            <option value="4">Side</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        Dessert
+                    </td>
+                    <td>
+                        <label>
+                            <input type="radio" name="dessert_prefer" value="qual" /> Qualitative 
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="dessert_prefer" value="quan" /> Quantitative 
+                        </label>
+                    </td>
+                    <td>
+                        <div id="dessert_condition">
+                            <label>
+                                <input type="radio" name="dessert_condition" value="yes" /> Yes
+                            </label>
+                            <br>
+                            <label>
+                                <input type="radio" name="dessert_condition" value="no" /> No
+                            </label>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <select id="dessert_item">
+                            <option value="0">Select Condition</option>
+                            <option value="1">Main Course</option>
+                            <option value="2">Drink</option>
+                            <option value="4">Side</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        Side
+                    </td>
+                    <td>
+                        <label>
+                            <input type="radio" name="side_prefer" value="qual" /> Qualitative 
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="side_prefer" value="quan" /> Quantitative 
+                        </label>
+                    </td>
+                    <td>
+                        <div id="side_condition">
+                           <label>
+                            <input type="radio" name="side_condition" value="yes" /> Yes 
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="side_condition" value="no" /> No 
+                        </label> 
+                        </div>
+                    </td>
+                    <td align="center">
+                        <select id="side_item">
+                            <option value="0">Select Condition</option>
+                            <option value="1">Main Course</option>
+                            <option value="2">Drink</option>
+                            <option value="3">Dessert</option>
+                        </select>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+    <div align="center" style="margin-bottom: 10px;">
+        <button class="btn btn-sm btn-primary" onclick="document.location.reload(true)"><i class="fa fa-refresh" aria-hidden="true"></i> Update </button>
+        <a href="#" id="next" class="btn btn-sm btn-primary"> Next <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript">
+    var order_array = [];
+    var bCon1 = true;
+    var bCon2 = true;
+    var bCon3 = true;
+    var bCon4 = true;
+
+    function removeItem(value) {
+        $("#main_item option[value='"+ value +"']").remove();
+        $("#drink_item option[value='"+ value +"']").remove();
+        $("#dessert_item option[value='"+ value +"']").remove();
+        $("#side_item option[value='"+ value +"']").remove();
+    }
+
+    function addItem(addText, addValue) {
+        var addItem = new Option(addText, addValue);
+        if (addValue != 1){
+            $('#main_item Option[value="'+ addValue +'"]').remove();
+            $('#main_item').append(new Option(addText, addValue, false, false));
+        }
+        if (addValue != 2){
+            $('#drink_item Option[value="'+ addValue +'"]').remove();
+            $('#drink_item').append(new Option(addText, addValue, false, false));
+        }
+        if (addValue != 3){
+            $('#dessert_item Option[value="'+ addValue +'"]').remove();
+            $('#dessert_item').append(new Option(addText, addValue, false, false));
+        }
+        if (addValue != 4){
+            $('#side_item Option[value="'+ addValue +'"]').remove();
+            $('#side_item').append(new Option(addText, addValue, false, false));
+        }
+
+    }
+
+    function check_option(sVal, pVal) {                    //conditional item set up
+        var arrItem = ['','main_item','drink_item','dessert_item','side_item'];
+        var arrText = ['','Main Course','Drink','Dessert','Side'];
+
+        for (var i = 1; i < arrItem.length; i ++) {
+            if (i == pVal) {
+                $("#" + arrItem[i] + " option[value='"+ sVal +"']").remove();
+
+                //Loop
+                var curVal = $('#' + arrItem[i]).val();
+                $('#' + curVal + ' Option[value="'+ sVal +'"]').remove();
+            }
+            else {
+                if (i == sVal)
+                    continue;
+                var arrList = [];
+                $("#"+ arrItem[i] +" option").each(function()
+                {
+                    arrList.push($(this).val());
+                });
+                if (!arrList.includes(""+ sVal +"")) {
+                    var addItem = new Option(arrText[sVal], sVal, false, false);
+                    $("#" + arrItem[i]).append(addItem);
+                }
+            }
+        }
+    }
+
+    function noLoop(curValue, removeValue) {
+        var arrList = ['','Main Course','Drink','Dessert','Side'];
+        var arrID = ['','main_item','drink_item','dessert_item','side_item'];
+
+        var arrVal = [];
+        for (var i = 1; i < arrList.length; i ++) {
+            if ($('#'+ arrID[i]).val() == curValue) {
+                arrVal.push(i);
+                for (var j = 1; j < arrList.length; j ++) {
+                    if ($('#'+ arrID[j]).val() == i) {
+                        arrVal.push(j);
+                    }
+                }
+            }
+        }
+        
+        for (var i = 0; i < arrVal.length; i ++) {
+            $("#"+ arrID[removeValue] +" option[value='"+ arrVal[i] +"']").remove();
+        }
+    }
+
+    $(document).ready(function() {
+        $('#main_item').click(function(){
+            if (bCon2 && bCon3 && bCon4) {
+                swal("Please Select Condition Type");
+            }
+        });
+        $('#drink_item').click(function(){
+            if (bCon1 && bCon3 && bCon4) {
+                swal("Please Select Condition Type");
+            }
+        });
+        $('#dessert_item').click(function(){
+            if (bCon1 && bCon2 && bCon4) {
+                swal("Please Select Condition Type");
+            }
+        });
+        $('#side_item').click(function(){
+            if (bCon1 && bCon2 && bCon3) {
+                swal("Please Select Condition Type");
+            }
+        });
+        $("#main_item").change(function() {
+            var itemVal = $(this).val();
+            noLoop(1, itemVal);
+            check_option(1, itemVal);
+            order();
+        });
+        $("#drink_item").change(function() {
+            var itemVal = $(this).val();
+            noLoop(2, itemVal);
+            check_option(2, itemVal);
+            order();
+        });
+        $("#dessert_item").change(function() {
+            var itemVal = $(this).val();
+            noLoop(3, itemVal);
+            check_option(3, itemVal);
+            order();
+        });
+        $("#side_item").change(function() {
+            var itemVal = $(this).val();
+            noLoop(4, itemVal);
+            check_option(4, itemVal);
+            order();
+        });
+
+        $('#next').click(function() {
+            var prefer1 = $('input:radio[name="main_prefer"]:checked').val();
+            var prefer2 = $('input:radio[name="drink_prefer"]:checked').val();
+            var prefer3 = $('input:radio[name="dessert_prefer"]:checked').val();
+            var prefer4 = $('input:radio[name="side_prefer"]:checked').val();
+
+            var condition1 = $('input:radio[name="main_condition"]:checked').val();
+            var condition2 = $('input:radio[name="drink_condition"]:checked').val();
+            var condition3 = $('input:radio[name="dessert_condition"]:checked').val();
+            var condition4 = $('input:radio[name="side_condition"]:checked').val();
+
+            var parent1 = $("#main_item option:selected").val();
+            var parent2 = $("#drink_item option:selected").val();
+            var parent3 = $("#dessert_item option:selected").val();
+            var parent4 = $("#side_item option:selected").val();
+
+            if (!prefer1) {
+                swal("Select Preference Type");
+                return;
+            } else {
+                if (prefer1 == 'qual' && !condition1) {
+                    swal("Select Condition");
+                    return;
+                } else {
+                    if (prefer1 == 'qual' && condition1 == 'yes' && parent1 == 0) {
+                        swal("Select Conditional Item");
+                        return;
+                    }
+                }
+            }
+
+            if (!prefer2) {
+                swal("Select Preference Type");
+                return;
+            } else {
+                if (prefer2 == 'qual' && !condition2) {
+                    swal("Select Condition");
+                    return;
+                } else {
+                    if (prefer2 == 'qual' && condition2 == 'yes' && parent2 == 0) {
+                        swal("Select Conditional Item");
+                        return;
+                    }
+                }
+            }
+
+            if (!prefer3) {
+                swal("Select Preference Type");
+                return;
+            } else {
+                if (prefer3 == 'qual' && !condition3) {
+                    swal("Select Condition");
+                    return;
+                } else {
+                    if (prefer3 == 'qual' && condition3 == 'yes' && parent3 == 0) {
+                        swal("Select Conditional Item");
+                        return;
+                    }
+                }
+            }
+
+            if (!prefer4) {
+                swal("Select Preference Type");
+                return;
+            } else {
+                if (prefer4 == 'qual' && !condition4) {
+                    swal("Select Condition");
+                    return;
+                } else {
+                    if (prefer4 == 'qual' && condition4 == 'yes' &&  parent4 == 0) {
+                        swal("Select Conditional Item");
+                        return;
+                    }
+                }
+            }
+
+            if (!condition1)
+                condition1 = 'yes';
+            if (!condition2)
+                condition2 = 'yes';
+            if (!condition3)
+                condition3 = 'yes';
+            if (!condition4)
+                condition4 = 'yes';
+            
+            $.ajax({
+                url: '{% url "saveData" %}',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'csrfmiddlewaretoken': '{{csrf_token}}', 'prefer1':prefer1,'prefer2':prefer2,'prefer3':prefer3,'prefer4':prefer4,'condition1':condition1,'condition2':condition2,'condition3':condition3,'condition4':condition4,'parent1':parent1,'parent2':parent2,'parent3':parent3,'parent4':parent4,'order_array':order_array
+                },
+                success: function(data) {
+                    parent.location.href = 'second';
+                    
+                }
+            });
+        });
+        //main
+        $('input:radio[name="main_prefer"]').change(function() {
+            if ($(this).val() == 'qual') {
+                addItem('Main Course', 1);
+                $('#main_condition').show();
+                if ($('input:radio[name="main_condition"]:checked').val() == 'yes') {
+                    bCon1 = true;
+                    $('#main_item').show();
+                } else {
+                    bCon1 = false;
+                }
+            } else {
+                removeItem(1);
+                bCon1 = true;
+               $('#main_condition').hide();
+               $('#main_item').hide();
+            }
+            order();
+        });
+        $('input:radio[name="main_condition"]').change(function() {
+            if ($(this).val() == 'yes') {
+                bCon1 = true;
+                $('#main_item').show();
+            } else {
+                bCon1 = false;
+               $('#main_item').hide();
+            }
+            order();
+        });
+
+
+        //side
+        $('input:radio[name="side_prefer"]').change(function() {
+            if ($(this).val() == 'qual') {
+                addItem('Side', 4);
+                $('#side_condition').show();
+                if ($('input:radio[name="side_condition"]:checked').val() == 'yes') {
+                    bCon4 = true;
+                    $('#side_item').show();
+                } else {
+                    bCon4 = false;
+                }
+            } else {
+                removeItem(4)
+                bCon4 = true;
+               $('#side_condition').hide();
+               $('#side_item').hide();
+            }
+            order();
+        });
+        $('input:radio[name="side_condition"]').change(function() {
+            if ($(this).val() == 'yes') {
+                bCon4 = true;
+                $('#side_item').show();
+            } else {
+                bCon4 = false;
+               $('#side_item').hide();
+            }
+            order();
+        });
+
+        //drink
+        $('input:radio[name="drink_prefer"]').change(function() {
+            if ($(this).val() == 'qual') {
+                addItem('Drink', 2);
+                $('#drink_condition').show();
+                if ($('input:radio[name="drink_condition"]:checked').val() == 'yes') {
+                    bCon2 = true;
+                    $('#drink_item').show();
+                } else {
+                    bCon2 = false;
+                }
+            } else {
+                removeItem(2);
+                bCon2 = true;
+               $('#drink_condition').hide();
+               $('#drink_item').hide();
+            }
+            order();
+        });
+        $('input:radio[name="drink_condition"]').change(function() {
+            if ($(this).val() == 'yes') {
+                bCon2 = true;
+                $('#drink_item').show();
+            } else {
+                bCon2 = false;
+               $('#drink_item').hide();
+            }
+            order();
+        });
+
+        //dessert
+        $('input:radio[name="dessert_prefer"]').change(function() {
+            if ($(this).val() == 'qual') {
+                addItem('Dessert', 3);
+                $('#dessert_condition').show();
+                if ($('input:radio[name="dessert_condition"]:checked').val() == 'yes') {
+                    bCon3 = true;
+                    $('#dessert_item').show();
+                } else {
+                    bCon3 = false;
+                }
+            } else {
+                removeItem(3);
+                bCon3 = true;
+               $('#dessert_condition').hide();
+               $('#dessert_item').hide();
+            }
+            order();
+        });
+        $('input:radio[name="dessert_condition"]').change(function() {
+            if ($(this).val() == 'yes') {
+                bCon3 = true;
+                $('#dessert_item').show();
+            } else {
+                bCon3 = false;
+               $('#dessert_item').hide();
+            }
+            order();
+        });
+    });
+    //order calc
+    function order() {
+        order_array = '';
+        var nocon_array = [];
+        var con_array = [];
+        var sub_array = [];
+        var other_array = [];
+        var html = '';
+
+        var id_array = ['main', 'drink', 'dessert', 'side'];
+        var name_array = [1,2,3,4];
+        var text_array = ['Main Course', 'Drink', 'Dessert', 'Side'];
+
+        //nocon_array array
+        for (var i = 0; i < 4; i ++) {
+            if ($('input:radio[name="'+ id_array[i] +'_prefer"]:checked').val() == 'qual') {
+                if ($('input:radio[name="'+ id_array[i] +'_condition"]:checked').val() == 'no') {
+                    nocon_array.push(name_array[i]);
+                    if (order_array == '')
+                        order_array += name_array[i];
+                    else
+                        order_array += ',' + name_array[i];
+                    if (html == '')
+                        html += text_array[i];
+                    else
+                        html += '<br>' + text_array[i];
+                }
+            }
+        }
+
+        //con_array array
+        for (var i = 0; i < nocon_array.length; i ++) {
+            for (var j = 0; j < 4; j ++) {
+                if ($('input:radio[name="'+ id_array[j] +'_prefer"]:checked').val() == 'qual' && $('input:radio[name="'+ id_array[j] +'_condition"]:checked').val() == 'yes') {
+                    if (nocon_array[i] == $('#'+ id_array[j] +'_item').val()) {
+                        con_array.push(name_array[j]);
+                        if (order_array == '')
+                            order_array += name_array[j];
+                        else
+                            order_array += ',' + name_array[j];
+                        if (html == '')
+                            html += text_array[j];
+                        else
+                            html += '<br>' + text_array[j];
+                    }
+                }
+            }
+        }
+
+        //sub_array array
+        for (var i = 0; i < con_array.length; i ++) {
+            for (var j = 0; j < 4; j ++) {
+                if ($('input:radio[name="'+ id_array[j] +'_prefer"]:checked').val() == 'qual' && $('input:radio[name="'+ id_array[j] +'_condition"]:checked').val() == 'yes') {
+                    if (con_array[i] == $('#'+ id_array[j] +'_item').val()) {
+                        sub_array.push(name_array[j]);
+                        if (order_array == '')
+                            order_array += name_array[j];
+                        else
+                            order_array += ',' + name_array[j];
+                        if (html == '')
+                            html += text_array[j];
+                        else
+                            html += '<br>' + text_array[j];
+                    }
+                }
+            }
+        }
+
+        //other_array array
+        for (var i = 0; i < name_array.length; i ++) {
+            if (!order_array.includes(name_array[i])) {
+                other_array.push(name_array[i]);
+                if ($('input:radio[name="'+ id_array[i] +'_prefer"]:checked').val() == 'quan')
+                    continue;
+                if (html == '')
+                    html += text_array[i];
+                else
+                    html += '<br>' + text_array[i];
+            }
+        }
+        if (order_array == '')
+            order_array += other_array;
+        else
+            order_array += ',' + other_array;
+        $('#order').html(html);
+    }
+</script>
+{% endblock %}

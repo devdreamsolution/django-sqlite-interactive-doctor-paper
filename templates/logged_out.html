@@ -1,0 +1,18 @@
+{% extends 'layout/login.html' %}
+
+{% block title %}See you!{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="card card-login mx-auto mt-5">
+        <div class="card-header">Logged out</div>
+        <div class="card-body">
+
+            <div class="text-center"> 
+                <p>You have been successfully logged out.</p>
+                <p><a href="{% url 'login' %}">Log in</a> again.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

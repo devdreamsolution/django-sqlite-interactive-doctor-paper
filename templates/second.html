@@ -1,0 +1,795 @@
+{% extends 'layout/app.html' %}
+{% block body %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+<!-- Breadcrumbs-->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'first' %}">Smart Intractive Application</a>
+    </li>
+    <li class="breadcrumb-item active">
+        <a href="{% url 'first' %}">User Preference Type</a>
+    </li>
+    <li class="breadcrumb-item active">
+        User Preference Selection
+    </li>
+</ol>
+<div class="container card">
+    <br>
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <table class="table table-bordered table-striped table-sm">
+        <center><h4>Integrating Qualitative and Quantitative preferences with hard Constraints</h4></center>
+        <thead class="alert-info">
+            <tr align="center">
+                {% for data in datas %}
+                    {% if data.item_id == 1 %}
+                        <th>Main Course</th>
+                    {% elif data.item_id == 2 %}
+                        <th>Drink</th>
+                    {% elif data.item_id == 3 %}
+                        <th>Dessert</th>
+                    {% elif data.item_id == 4 %}
+                        <th>Side</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for data in datas %}
+                    <td>
+                    {% if data.prefer_type == 'qual' and data.condition == 'yes' %}
+                        {% if data.parent_id == 1 %}
+                            <select class="" id="{{ data.item_id }}_item" onchange="">
+                            {% for item in main_items %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                            </select>
+                        {% elif data.parent_id == 2 %}
+                            <select class="" id="{{ data.item_id }}_item" onchange="">
+                            {% for item in drink_items %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                            </select>
+                        {% elif data.parent_id == 3 %}
+                            <select class="" id="{{ data.item_id }}_item" onchange="">
+                            {% for item in dessert_items %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                            </select>
+                        {% elif data.parent_id == 4 %}
+                            <select class="" id="{{ data.item_id }}_item" onchange="">
+                            {% for item in side_items %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                            </select>
+                        {% endif %}
+                    {% endif %}
+                        <button class="btn btn-sm btn-primary" onclick="save{{ data.item_id }}();"><span class="fa fa-save"> save</span></button>
+                        <button class="btn btn-sm btn-danger" onclick="clear{{ data.item_id }}();"><span class="fa fa-trash"> clear</span></button>
+                        <button class="btn btn-sm btn-warning" onclick="edit{{ data.item_id }}();"><span class="fa fa-edit"> edit</span></button>
+                    </td>
+                {% endfor %}
+            </tr>
+            <tr align="center">
+                {% for data in datas %}
+                    <td>
+                    {% if data.item_id == 1 %}
+                        {% if data.prefer_type == 'quan' %}
+                            <select id="{{ data.item_id }}" multiple="2" style="width: 70%;" size="5">
+                        {% else %}
+                            <select id="{{ data.item_id }}" multiple="2" style="width: 100%;" size="5">
+                        {% endif %}
+                        {% for item in main_items %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+                    {% elif data.item_id == 2 %}
+                        {% if data.prefer_type == 'quan' %}
+                            <select id="{{ data.item_id }}" multiple="2" style="width: 70%;" size="5">
+                        {% else %}
+                            <select id="{{ data.item_id }}" multiple="2" style="width: 100%;" size="5">
+                        {% endif %}
+                        {% for item in drink_items %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+                    {% elif data.item_id == 3 %}
+                        {% if data.prefer_type == 'quan' %}
+                            <select id="{{ data.item_id }}" multiple="2" style="width: 70%;" size="5">
+                        {% else %}
+                            <select id="{{ data.item_id }}" multiple="2" style="width: 100%;" size="5">
+                        {% endif %}
+                        {% for item in dessert_items %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+                    {% elif data.item_id == 4 %}
+                        {% if data.prefer_type == 'quan' %}
+                            <select id="{{ data.item_id }}" multiple="2" style="width: 70%;" size="5">
+                        {% else %}
+                            <select id="{{ data.item_id }}" multiple="2" style="width: 100%;" size="5">
+                        {% endif %}
+                        {% for item in side_items %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+                    {% endif %}
+                    {% if data.prefer_type == 'quan' %}
+                        <select id="{{ data.item_id }}_num" multiple="2" style="width: 25%;" size="5">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    {% endif %}
+
+                    </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for data in datas %}
+                    <td>
+                    <div id="{{ data.item_id }}_order">
+                        
+                    </div>
+                    </td>
+                </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped table-sm">
+        <thead class="alert-info">
+            <tr align="left">
+                <th colspan="2">User Constrants</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Carb : &nbsp;&nbsp;<input type="number" id="carb" />
+                </td>
+                <td>
+                    Fat : &nbsp;&nbsp;&nbsp;<input type="number" id="fat" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Sugar : <input type="number" id="sugar" />
+                </td>
+                <td>
+                    Price : <input type="number" id="price" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped table-sm">
+        <thead class="alert-info">
+            <tr align="left">
+                <th width="30%">Optimal Solution : </th>
+                <th width="70%">
+                    <div id="solution">
+                        
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <button class="btn btn-primary" onclick="Calc();">Show Meal</button>
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Recommendation meal :
+                </td>
+                <td>
+                    <div id="time">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div align="center" style="margin-bottom: 10px;">
+        <a href="{% url 'first' %}" class="btn btn-primary"><i class="fa fa-arrow-circle-left"> Previous </i></a>
+        <button class="btn btn-primary" onclick="Calc();">Place the Order</button>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<script type="text/javascript">
+    var count1 = 0;
+    var html1 = '';
+    var bSave1 = 0;
+
+    var count2 = 0;
+    var html2 = '';
+    var bSave2 = 0;
+
+    var count3 = 0;
+    var html3 = '';
+    var bSave3 = 0;
+
+    var count4 = 0;
+    var html4 = '';
+    var bSave4 = 0;
+
+    var data1 = '';
+    var data2 = '';
+    var data3 = '';
+    var data4 = '';
+
+    $(document).ready(function(){
+
+    });
+    $('#1').click(function(e){
+        var chRepeat1 = html1.split(':');
+        var chRepeat2 = html1.split('>');
+        if (chRepeat1[chRepeat1.length - 1] == $(this).children("option:selected").text() || chRepeat2[chRepeat2.length - 1] == $(this).children("option:selected").text()) {
+            return;
+        }
+            
+
+        var size = $(this).children('option').length;
+        var item_size = $('#1_item').children('option').length;
+        var num_size = $('#1_num').children('option').length;
+        if (num_size > 0)
+            return;
+        if (count1 >= size) {
+            return;
+        }
+        if (item_size == 0) {
+            var text = $(this).children("option:selected").text();
+            var parent_id = -100;
+            var item_id = $(this).children('option:selected').val();
+            if (count1 == '0') {
+                html1 += text;
+                data1 = parent_id + ':' + item_id;
+            } else {
+                html1 += '>' + text;
+                data1 += ',' + item_id;
+            }
+            $('#1_order').html(html1);
+            count1 ++;
+        }
+        if (bSave1 >= item_size) {
+            return;
+        }
+        var text = $(this).children("option:selected").text();
+        var item_id = $(this).children('option:selected').val();
+        if (count1 == '0') {
+            html1 += $('#1_item').children('option:selected').text() + ':' + text;
+            data1 = $('#1_item').children('option:selected').val() + ':' + item_id;
+        }
+        if (count1 > 0) {
+            html1 += '>' + text;
+            data1 += ',' + item_id;
+        }
+        $('#1_order').html(html1);
+        count1 ++;
+    });
+    $('#1_num').click(function(e){
+        var n = html1.includes($('#1').children("option:selected").text());
+        if (n) {
+            return;
+        }
+        n = html1.includes($(this).val());
+        if (n)
+            return;
+
+        var text = $('#1').children("option:selected").text();
+        var item_id = $('#1').children('option:selected').val();
+        var num = $(this).children("option:selected").text();
+        var size = $('#1').children('option').length;
+        var parent_id = -200;
+        if (count1 >= size || text == '') {
+            return;
+        }
+        if (count1 > 0) {
+            html1 = html1 + '<br>' + text + ' : ' + num;
+            data1 += ',' + item_id + '-' + num;
+        } else {
+            html1 = text + ' : ' + num;
+            data1 = parent_id + ':' + item_id + '-' + num;
+        }
+        $('#1_order').html(html1);
+        count1 ++;
+    });
+
+    $('#2').click(function(e){
+        var chRepeat1 = html2.split(':');
+        var chRepeat2 = html2.split('>');
+        if (chRepeat1[chRepeat1.length - 1] == $(this).children("option:selected").text() || chRepeat2[chRepeat2.length - 1] == $(this).children("option:selected").text()) {
+            return;
+        }
+
+        var size = $(this).children('option').length;
+        var item_size = $('#2_item').children('option').length;
+        var num_size = $('#2_num').children('option').length;
+        if (num_size > 0)
+            return;
+        if (count2 >= size) {
+            return;
+        }
+        if (item_size == 0) {
+            var text = $(this).children("option:selected").text();
+            var parent_id = -100;
+            var item_id = $(this).children('option:selected').val();
+            if (count2 == '0') {
+                html2 += text;
+                data2 = parent_id + ':' + item_id;
+            } else {
+                html2 += '>' + text;
+                data2 += ',' + item_id;
+            }
+            $('#2_order').html(html2);
+            count2 ++;
+        }
+        if (bSave2 >= item_size) {
+            return;
+        }
+        var text = $(this).children("option:selected").text();
+        var item_id = $(this).children('option:selected').val();
+        if (count2 == '0') {
+            html2 += $('#2_item').children('option:selected').text() + ':' + text;
+            data2 = $('#2_item').children('option:selected').val() + ':' + item_id;
+        }
+        if (count2 > 0) {
+            html2 += '>' + text;
+            data2 += ',' + item_id;
+        }
+        $('#2_order').html(html2);
+        count2 ++;
+    });
+    $('#2_num').click(function(e){
+        var n = html2.includes($('#2').children("option:selected").text());
+        if (n) {
+            return;
+        }
+        n = html2.includes($(this).val());
+        if (n)
+            return;
+
+        var text = $('#2').children("option:selected").text();
+        var item_id = $('#2').children('option:selected').val();
+        var num = $(this).children("option:selected").text();
+        var size = $('#2').children('option').length;
+        var parent_id = -200;
+        if (count2 >= size || text == '') {
+            return;
+        }
+        if (count2 > 0) {
+            html2 = html2 + '<br>' + text + ' : ' + num;
+            data2 += ',' + item_id + '-' + num;
+        } else {
+            html2 = text + ' : ' + num;
+            data2 = parent_id + ':' + item_id + '-' + num;
+        }
+        $('#2_order').html(html2);
+        count2 ++;
+    });
+
+    $('#3').click(function(e){
+        var chRepeat1 = html3.split(':');
+        var chRepeat2 = html3.split('>');
+        if (chRepeat1[chRepeat1.length - 1] == $(this).children("option:selected").text() || chRepeat2[chRepeat2.length - 1] == $(this).children("option:selected").text()) {
+            return;
+        }
+
+        var size = $(this).children('option').length;
+        var item_size = $('#3_item').children('option').length;
+        var num_size = $('#3_num').children('option').length;
+        if (num_size > 0)
+            return;
+        if (count3 >= size) {
+            return;
+        }
+        if (item_size == 0) {
+            var text = $(this).children("option:selected").text();
+            var parent_id = -100;
+            var item_id = $(this).children('option:selected').val();
+            if (count3 == '0') {
+                html3 += text;
+                data3 = parent_id + ':' + item_id;
+            } else {
+                html3 += '>' + text;
+                data3 += ',' + item_id;
+            }
+            $('#3_order').html(html3);
+            count3 ++;
+        }
+        if (bSave3 >= item_size) {
+            return;
+        }
+        var text = $(this).children("option:selected").text();
+        var item_id = $(this).children('option:selected').val();
+        if (count3 == '0') {
+            html3 += $('#3_item').children('option:selected').text() + ':' + text;
+            data3 = $('#3_item').children('option:selected').val() + ':' + item_id;
+        }
+        if (count3 > 0) {
+            html3 += '>' + text;
+            data3 += ',' + item_id;
+        }
+        $('#3_order').html(html3);
+        count3 ++;
+    });
+    $('#3_num').click(function(e){
+        var n = html3.includes($('#3').children("option:selected").text());
+        if (n) {
+            return;
+        }
+        n = html3.includes($(this).val());
+        if (n)
+            return;
+
+        var text = $('#3').children("option:selected").text();
+        var item_id = $('#3').children('option:selected').val();
+        var num = $(this).children("option:selected").text();
+        var size = $('#3').children('option').length;
+        var parent_id = -200;
+        if (count3 >= size || text == '') {
+            return;
+        }
+        if (count3 > 0) {
+            html3 = html3 + '<br>' + text + ' : ' + num;
+            data3 += ',' + item_id + '-' + num;
+        } else {
+            html3 = text + ' : ' + num;
+            data3 = parent_id + ':' + item_id + '-' + num;
+        }
+        $('#3_order').html(html3);
+        count3 ++;
+    });
+
+    $('#4').click(function(e){
+        var chRepeat1 = html4.split(':');
+        var chRepeat2 = html4.split('>');
+        if (chRepeat1[chRepeat1.length - 1] == $(this).children("option:selected").text() || chRepeat2[chRepeat2.length - 1] == $(this).children("option:selected").text()) {
+            return;
+        }
+
+        var size = $(this).children('option').length;
+        var item_size = $('#4_item').children('option').length;
+        var num_size = $('#4_num').children('option').length;
+        if (num_size > 0)
+            return;
+        if (count4 >= size) {
+            return;
+        }
+        if (item_size == 0) {
+            var text = $(this).children("option:selected").text();
+            var parent_id = -100;
+            var item_id = $(this).children('option:selected').val();
+            if (count4 == '0') {
+                html4 += text;
+                data4 = parent_id + ':' + item_id;
+            } else {
+                html4 += '>' + text;
+                data4 += ',' + item_id;
+            }
+            $('#4_order').html(html4);
+            count4 ++;
+        }
+        if (bSave4 >= item_size) {
+            return;
+        }
+        var text = $(this).children("option:selected").text();
+        var item_id = $(this).children('option:selected').val();
+        if (count4 == '0') {
+            html4 += $('#4_item').children('option:selected').text() + ':' + text;
+            data4 = $('#4_item').children('option:selected').val() + ':' + item_id;
+        }
+        if (count4 > 0) {
+            html4 += '>' + text;
+            data4 += ',' + item_id;
+        }
+        $('#4_order').html(html4);
+        count4 ++;
+    });
+    $('#4_num').click(function(e){
+        var n = html1.includes($('#4').children("option:selected").text());
+        if (n) {
+            return;
+        }
+        n = html4.includes($(this).val());
+        if (n)
+            return;
+
+        var text = $('#4').children("option:selected").text();
+        var item_id = $('#4').children('option:selected').val();
+        var num = $(this).children("option:selected").text();
+        var size = $('#4').children('option').length;
+        var parent_id = -200;
+        if (count4 >= size || text == '') {
+            return;
+        }
+        if (count4 > 0) {
+            html4 = html4 + '<br>' + text + ' : ' + num;
+            data4 += ',' + item_id + '-' + num;
+        } else {
+            html4 = text + ' : ' + num;
+            data4 = parent_id + ':' + item_id + '-' + num;
+        }
+        $('#4_order').html(html4);
+        count4 ++;
+    });
+
+    function Calc() {
+        var carb = $('#carb').val();
+        var fat = $('#fat').val();
+        var sugar = $('#sugar').val();
+        var price = $('#price').val();
+
+        $.ajax({
+            url: '{% url "calc" %}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}','carb':carb,'fat': fat,'sugar':sugar,'price':price
+            },
+            success: function(data) {
+                $('#time').html(data.data);
+                $('#solution').html(data.firstResult);
+            }
+        });
+    }
+
+    function save1() {
+        var item_data = '';
+        var item_size = $('#1_item').children('option').length;
+        if (item_size != 0) {
+            html1 += '<br>';
+            count1 = 0;
+            bSave1 ++;
+        }
+        data1 = data1.split(':');
+        var parent_id = data1[0];
+        if (parent_id == '-200') {
+            var temp = data1[1].split(',');
+            var item = [];
+            var value = [];
+            for (var i = 0; i < temp.length; i ++) {
+                var element = temp[i].split('-');
+                item.push(element[0]);
+                value.push(element[1]);
+            }
+            for (var i = 0; i < value.length; i ++) {
+                for (var j = i + 1; j < value.length; j ++) {
+                    if (value[i] > value[j]) {
+                        var swap = item[j];
+                        item[j] = item[i];
+                        item[i] = swap;
+                    }
+                }
+            }
+            
+            for(var i = 0; i < item.length; i ++) {
+                if (i == item.length - 1)
+                    item_data += item[i];
+                else
+                    item_data += item[i] + ',';
+            }
+        } else {
+            item_data = data1[1];
+        }
+        $.ajax({
+            url: '{% url "mainSave" %}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}','parent_id':parent_id,'item_data': item_data
+            },
+            success: function(data) {
+                toastr.options.timeOut = 1500;
+                toastr.success(data.data);
+            }
+        });
+    }
+    function save2() {
+        var item_data = '';
+        var item_size = $('#2_item').children('option').length;
+        if (item_size != 0) {
+            html2 += '<br>';
+            count2 = 0;
+            bSave2 ++;
+        }
+        data2 = data2.split(':');
+        var parent_id = data2[0];
+        if (parent_id == '-200') {
+            var temp = data2[1].split(',');
+            var item = [];
+            var value = [];
+            for (var i = 0; i < temp.length; i ++) {
+                var element = temp[i].split('-');
+                item.push(element[0]);
+                value.push(element[1]);
+            }
+            for (var i = 0; i < value.length; i ++) {
+                for (var j = i + 1; j < value.length; j ++) {
+                    if (value[i] > value[j]) {
+                        var swap = item[j];
+                        item[j] = item[i];
+                        item[i] = swap;
+                    }
+                }
+            }
+            
+            for(var i = 0; i < item.length; i ++) {
+                if (i == item.length - 1)
+                    item_data += item[i];
+                else
+                    item_data += item[i] + ',';
+            }
+        } else {
+            item_data = data2[1];
+        }
+        $.ajax({
+            url: '{% url "drinkSave" %}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}','parent_id':parent_id,'item_data': item_data
+            },
+            success: function(data) {
+                toastr.options.timeOut = 1500;
+                toastr.success(data.data);
+            }
+        });
+    }
+    function save3() {
+        var item_data = '';
+        var item_size = $('#3_item').children('option').length;
+        if (item_size != 0) {
+            html3 += '<br>';
+            count3 = 0;
+            bSave3 ++;
+        }
+        data3 = data3.split(':');
+        var parent_id = data3[0];
+        if (parent_id == '-200') {
+            var temp = data3[1].split(',');
+            var item = [];
+            var value = [];
+            for (var i = 0; i < temp.length; i ++) {
+                var element = temp[i].split('-');
+                item.push(element[0]);
+                value.push(element[1]);
+            }
+            for (var i = 0; i < value.length; i ++) {
+                for (var j = i + 1; j < value.length; j ++) {
+                    if (value[i] > value[j]) {
+                        var swap = item[j];
+                        item[j] = item[i];
+                        item[i] = swap;
+                    }
+                }
+            }
+            
+            for(var i = 0; i < item.length; i ++) {
+                if (i == item.length - 1)
+                    item_data += item[i];
+                else
+                    item_data += item[i] + ',';
+            }
+        } else {
+            item_data = data3[1];
+        }
+        $.ajax({
+            url: '{% url "dessertSave" %}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}','parent_id':parent_id,'item_data': item_data
+            },
+            success: function(data) {
+                toastr.options.timeOut = 1500;
+                toastr.success(data.data);
+            }
+        });
+    }
+    function save4() {
+        var item_data = '';
+        var item_size = $('#4_item').children('option').length;
+        if (item_size != 0) {
+            html4 += '<br>';
+            count4 = 0;
+            bSave4 ++;
+        }
+        data4 = data4.split(':');
+        var parent_id = data4[0];
+        if (parent_id == '-200') {
+            var temp = data4[1].split(',');
+            var item = [];
+            var value = [];
+            for (var i = 0; i < temp.length; i ++) {
+                var element = temp[i].split('-');
+                item.push(element[0]);
+                value.push(element[1]);
+            }
+            for (var i = 0; i < value.length; i ++) {
+                for (var j = i + 1; j < value.length; j ++) {
+                    if (value[i] > value[j]) {
+                        var swap = item[j];
+                        item[j] = item[i];
+                        item[i] = swap;
+                    }
+                }
+            }
+            
+            for(var i = 0; i < item.length; i ++) {
+                if (i == item.length - 1)
+                    item_data += item[i];
+                else
+                    item_data += item[i] + ',';
+            }
+        } else {
+            item_data = data4[1];
+        }
+        $.ajax({
+            url: '{% url "sideSave" %}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}','parent_id':parent_id,'item_data': item_data
+            },
+            success: function(data) {
+                toastr.options.timeOut = 1500;
+                toastr.success(data.data);
+            }
+        });
+    }
+    function clear1() {
+        html1 = '';
+        count1 = 0;
+        bSave1 = 0;
+        $('#1_order').html(html1);
+    }
+    function clear2() {
+        html2 = '';
+        count2 = 0;
+        bSave2 = 0;
+        $('#2_order').html(html2);
+    }
+    function clear3() {
+        html3 = '';
+        count3 = 0;
+        bSave3 = 0;
+        $('#3_order').html(html3);
+    }
+    function clear4() {
+        html4 = '';
+        count4 = 0;
+        bSave4 = 0;
+        $('#4_order').html(html4);
+    }
+    
+    // $('#dessert_item').change(function(){
+    //     html = '';
+    //     count = 0;
+    //     $('#dessert_order').html(html);
+    // });
+    // $('#side_item').change(function(){
+    //     html = '';
+    //     count = 0;
+    //     $('#side_order').html(html);
+    // });
+</script>
+{% endblock %}
+

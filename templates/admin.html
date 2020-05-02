@@ -1,0 +1,72 @@
+{% extends 'layout/app.html' %}
+{% block body %}
+<!-- Breadcrumbs-->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="/">Smart Intractive Application</a>
+    </li>
+    <li class="breadcrumb-item active">Admin Page</li>
+    <li class="breadcrumb-item"><a href="#" onclick="addItem();" style="padding: 8px; background-color: green; color: white;">ADD</a></li>
+</ol>
+<div class="container card">
+    <div class="form-group"></div>
+    <br />
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <div class="">
+        <center><h4>Integrating Qualitative and Quantitative preferences with hard Constraints</h4></center>
+        <dir class="col-md-3">
+            <select id="component" onchange="getData();">
+                  <option value="1">Main Course</option>
+                  <option value="2">Drink</option>
+                  <option value="3">Dessert</option>
+                  <option value="4">Side</option>
+            </select>
+        </dir>
+        <div >
+            <table class="table table-bordered table-striped table-sm">
+                <thead class="alert-info">
+                    <tr align="center">
+                        <th>Item Name</th>
+                        <th>Carb</th>
+                        <th>Fat</th>
+                        <th>Suaaer</th>
+                        <th>Protein</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbl_body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        getData();
+    });
+    function getData() {
+        var component_id = $("#component option:selected").val();
+        $.ajax({
+            url: 'getData',
+            type: 'POST',
+            dataType: 'json',
+            data: {'csrfmiddlewaretoken': '{{csrf_token}}', 'id':component_id},
+            success: function(data) {
+                $('#tbl_body').html(data.data);
+            }
+        });
+    }
+
+    function addItem() {
+        var id = $("#component option:selected").val();
+        parent.location.href = 'addItem/'+id;
+    }
+</script>
+{% endblock %}
